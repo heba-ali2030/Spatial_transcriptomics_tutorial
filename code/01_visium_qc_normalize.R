@@ -4,6 +4,7 @@ source("code/_common.R")
 
 # ---- 1. Load the data ---------------------------------------------------------
 # stxBrain = 10x Visium, sagittal mouse brain. "anterior1" is the front half.
+# ?stxBrain 
 brain <- LoadData("stxBrain", type = "anterior1")
 brain <- UpdateSeuratObject(brain)
 brain
@@ -30,7 +31,7 @@ summary(brain$nFeature_Spatial)
 # matter reflect biology, so the tutorial uses SCTransform instead.
 brain <- SCTransform(brain, assay = "Spatial", verbose = FALSE)
 DefaultAssay(brain)  # now "SCT"
-
+brain
 # ---- 4. Visualize genes on the tissue ----------------------------------------
 # Hpca = hippocampus marker; Ttr = choroid plexus marker.
 save_fig(SpatialFeaturePlot(brain, features = c("Hpca", "Ttr")), "01_hpca_ttr")
@@ -44,11 +45,23 @@ save_fig(p1 + p2, "01_ttr_size_alpha")
 save_checkpoint(brain, "01_brain_sct")
 
 # ---- Exercises ----------------------------------------------------------------
-# 1. Plot nFeature_Spatial on the tissue. Is it similar to nCount_Spatial?
+# 1. Plot nFeature_Spatial on the tissue. Is it similar to nCount_Spatial? 
+SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.position = "right")
+SpatialFeaturePlot(brain, features = "nFeature_Spatial")
+
+# check if they are correlates 
+FeatureScatter(brain, feature1 = "nCount_Spatial", feature2 = "nFeature_Spatial")
+
 # 2. Make a log-normalized copy and compare it with SCT for one gene:
-#      ln <- NormalizeData(brain, assay = "Spatial")
-#      DefaultAssay(ln) <- "Spatial"
-#      SpatialFeaturePlot(ln, "Hpca") + SpatialFeaturePlot(brain, "Hpca")
+ln <- NormalizeData(brain, assay = "Spatial")
+
+DefaultAssay(ln) <- "Spatial"
+SpatialFeaturePlot(ln, "Hpca") + SpatialFeaturePlot(brain, "Hpca")
+
 # 3. Pick two genes you know (for example Mbp for white matter, Gad1 for
 #    interneurons) and plot them. Do they appear where you expect?
+SpatialFeaturePlot(ln, "Mbp") + SpatialFeaturePlot(brain, "Mbp")
+SpatialFeaturePlot(brain, features = c("Mbp", "Gad1"))
+
 # 4. Try image.alpha = 0 in SpatialFeaturePlot. What does it change?
+SpatialFeaturePlot(brain, features = "Hpca", image.alpha = 0)
