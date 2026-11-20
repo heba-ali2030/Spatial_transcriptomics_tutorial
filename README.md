@@ -12,7 +12,7 @@ read the comments, look at each plot, then do the **exercises** at the bottom.
 Each module saves a checkpoint in `objects/`, so the next module can start without
 recomputing everything.
 
-The tutorial targets Seurat 6.0. These scripts were written to work on Seurat 5.x too (you have 5.6.0).
+The tutorial targets Seurat 6.0. These scripts were written to work on Seurat 5.x too
 
 ## Plan (about 2–3 weeks at 1 hour a day)
 
